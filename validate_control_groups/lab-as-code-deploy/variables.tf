@@ -122,6 +122,7 @@ variable "gitlab_runner_token" {
   description = "GitLab runner registration token"
   type        = string
   sensitive   = true # To keep the token secure
+  default     = null
 }
 
 # variable "github_organization" {
