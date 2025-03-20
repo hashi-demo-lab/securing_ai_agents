@@ -1,0 +1,138 @@
+global:
+  enabled: true
+  namespace: "vault"
+  tlsDisable: false
+  imagePullSecrets: []
+  
+injector:
+  enabled: false
+
+server:
+  enabled: true
+  enterpriseLicense:
+    secretName: "vaultlicense"
+    secretKey: "license"
+
+  image:
+    repository: "hashicorp/vault-enterprise"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  
+  updateStrategyType: "OnDelete"
+
+  logLevel: "trace"
+
+  logFormat: "json"
+
+  resources: {}
+  
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    activeService: true
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/rewrite-target: "/"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - host: vault-dc1.hashibank.com
+    tls:
+      - secretName: vault-certificate
+        hosts:
+          - vault-dc1.hashibank.com
+
+  authDelegator:
+    enabled: true
+  
+  readinessProbe:
+    port: 8200
+    failureThreshold: 2
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 5
+  
+  extraEnvironmentVars:
+    VAULT_CACERT: /vault/tls/ca.crt
+    TZ: "Australia/Sydney"
+    VAULT_API_ADDR: "https://vault-dc1.hashibank.com:8200"
+
+  volumes:
+    - name: vault-tls
+      secret:
+        secretName: "vault-certificate"
+        items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+
+  volumeMounts:
+    - name: vault-tls
+      mountPath: /vault/tls
+      readOnly: true
+
+  affinity: ""
+  
+  dataStorage:
+    enabled: true
+    size: 2Gi
+    mountPath: "/vault/data"
+    storageClass: null
+    accessMode: ReadWriteOnce
+    annotations: {}
+    labels: {}
+  
+  auditStorage:
+    enabled: true
+    size: 2Gi
+    mountPath: "/vault/audit"
+    storageClass: null
+    accessMode: ReadWriteOnce
+    annotations: {}
+    labels: {}
+
+  ha:
+    enabled: true
+    replicas: 3
+
+    raft:
+      enabled: true
+      setNodeId: true
+      
+      config: |
+        ui = true
+
+        storage "raft" {
+          path = "/vault/data"
+        }
+        
+        listener "tcp" {
+          tls_disable = false
+          api_addr = "https://vault-dc1.hashibank.com:8200"
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+          tls_cert_file = "/vault/tls/tls.crt"
+          tls_key_file = "/vault/tls/tls.key"
+          tls_disable_client_certs = false
+          #tls_client_ca_file = "/vault/tls/ca.crt"
+        }
+        
+        telemetry {
+            prometheus_retention_time = "4h"
+            disable_hostname = true
+          }
+
+        service_registration "kubernetes" {}
+
+  serviceAccount:
+    create: true
+    name: ""
+    createSecret: false
+    annotations: {}
+    extraLabels: {}
+    serviceDiscovery:
+      enabled: true

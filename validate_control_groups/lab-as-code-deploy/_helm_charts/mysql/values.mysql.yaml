@@ -1,0 +1,55 @@
+## Global parameters
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  defaultStorageClass: ""
+
+## MySQL image settings
+image:
+  registry: docker.io
+  repository: bitnami/mysql
+  tag: latest
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+
+## MySQL architecture (single instance)
+architecture: standalone
+
+## MySQL Authentication parameters
+auth:
+  rootPassword: root
+  createDatabase: true
+  database: "my_app"
+  username: dbsvc1
+  password: dbsvc1
+  existingSecret: ""  # Use existing secret for passwords, if needed
+
+initdbScripts:
+  create_users.sql: |
+    -- Create Vault admin user and grant privileges if not exists
+    CREATE USER IF NOT EXISTS 'vaultadmin'@'%' IDENTIFIED BY 'vaultadmin';
+    GRANT ALL PRIVILEGES ON *.* TO 'vaultadmin'@'%' WITH GRANT OPTION;
+
+    -- Create dbsvc1 user and grant permissions to the app database if not exists
+    CREATE USER IF NOT EXISTS 'dbsvc1'@'%' IDENTIFIED BY 'dbsvc1';
+    GRANT INSERT, SELECT, UPDATE, DELETE ON my_app.* TO 'dbsvc1'@'%';
+    FLUSH PRIVILEGES;
+
+
+
+## MySQL pod and StatefulSet settings
+primary:
+  persistence:
+    enabled: false
+    storageClass: ""  # Specify your storage class, if needed
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi  # Persistent volume size (matches the original manifest)
+    existingClaim: ""  # If using an existing PVC
+  replicaCount: 1
+  resources: {}  # You can set CPU and memory requests/limits if needed
+  extraVolumeMounts: []
+  extraVolumes: []
+  service:
+    type: LoadBalancer
+    port: 3306

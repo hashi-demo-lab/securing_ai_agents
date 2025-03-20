@@ -1,0 +1,55 @@
+# Basic OpenLDAP configuration with certificates
+
+global:
+  ldapDomain: "hashibank.com"      
+  adminUser: "admin"               
+  adminPassword: "Not@SecurePassw0rd"  
+  configUserEnabled: true          
+  configUser: "admin"              
+  configPassword: "Not@SecurePassw0rd" 
+
+replicaCount: 1                    
+
+service:
+  enableLdapPort: true              
+  enableSslLdapPort: false          
+
+persistence:
+  enabled: false                    
+
+phpldapadmin:
+  enabled: true
+  image:
+    repository: osixia/phpldapadmin
+    tag: 0.9.0
+    pullPolicy: IfNotPresent
+  env:
+    PHPLDAPADMIN_LDAP_CLIENT_TLS_REQCERT: "never"
+  initContainers:
+    - name: modify-configuration
+      image: busybox
+      command: [sh, '-c']
+      args:
+        - |
+          echo "This is the init container working."
+          cp -p /container/service/phpldapadmin/startup.sh /data/
+          sed -i -e 's/exit 0/# exit 0/' /data/startup.sh
+          echo "Init container is complete."
+      volumeMounts:
+        - mountPath: /data
+          name: data
+  volumes:
+    - name: data
+      emptyDir: {}
+
+  service:
+    type: ClusterIP
+    port: 443  # Use HTTPS
+
+ltb-passwd:
+  enabled: false                    
+
+startupProbe:
+  enabled: true                     
+  initialDelaySeconds: 60            
+  failureThreshold: 30               

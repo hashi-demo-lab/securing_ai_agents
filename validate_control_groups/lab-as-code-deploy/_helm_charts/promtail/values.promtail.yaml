@@ -1,0 +1,25 @@
+rbac:
+  pspEnabled: false  # Disable PodSecurityPolicy (Deprecated in Kubernetes 1.25+)
+
+config:
+  clients:
+    - url: http://loki.prometheus.svc.cluster.local:3100/loki/api/v1/push
+
+  positions:
+    filename: /run/promtail/positions.yaml
+
+  scrape_configs:
+    - job_name: "kubernetes-pods-vault"
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace]
+          regex: "vault"
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_name]
+          regex: "vault.*"
+          action: keep
+        - source_labels: [__meta_kubernetes_pod_container_name]
+          target_label: container
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)

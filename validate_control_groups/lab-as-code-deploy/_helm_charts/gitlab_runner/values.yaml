@@ -1,0 +1,22 @@
+# GitLab Runner Configuration
+
+gitlabUrl: "https://gitlab.com/"  # URL of the GitLab server for runner registration
+runnerRegistrationToken: "${runner_registration_token}"
+
+# Runner Settings
+runners:
+  privileged: true  # Allows using Docker within the runner for building Docker images
+  image: "ubuntu:latest"  # Default image for jobs
+  tags:
+    - "kubernetes"  # Tags to identify the runner in GitLab CI
+  environment:
+    CI_DEBUG_TRACE: "true"  # Enable debug trace for more detailed logs
+
+# Role-Based Access Control
+rbac:
+  create: true  # Enable RBAC for managing access permissions
+
+# Service Account
+serviceAccount:
+  create: true  # Create a new service account for the runner
+  name: "gitlab-runner"  # Name of the service account

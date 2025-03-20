@@ -1,0 +1,85 @@
+rbac:
+  create: true
+
+serviceAccounts:
+  server:
+    create: true
+    name: ""
+
+server:
+  name: server
+
+  image:
+    repository: quay.io/prometheus/prometheus
+    tag: "latest"  # Specific version of Prometheus, adjust as needed
+
+  args:
+    - "--config.file=/etc/prometheus/prometheus.yml"
+    - "--storage.tsdb.path=/data"
+    - "--storage.tsdb.retention.time=15d"
+
+  configPath: /etc/prometheus/prometheus.yml
+
+  global:
+    scrape_interval: 1m
+    scrape_timeout: 10s
+    evaluation_interval: 1m
+  
+  extraVolumeMounts:
+    - name: prometheus-config
+      mountPath: /etc/prometheus/prometheus.yml
+      subPath: prometheus.yml
+    - name: prometheus-token
+      mountPath: /etc/prometheus/prometheus-token
+      subPath: token
+    - name: prometheus-ca
+      mountPath: /etc/prometheus/ca.crt
+      subPath: ca.crt
+
+  extraVolumes:
+    - name: prometheus-config
+      configMap:
+        name: prometheus-scrape-config
+    - name: prometheus-token
+      secret:
+        secretName: prometheus-token-secret
+    - name: prometheus-ca
+      secret:
+        secretName: prometheus-ca-secret
+
+  retention: "15d"
+  persistentVolume:
+    enabled: true
+    size: 8Gi
+    mountPath: /data
+
+  service:
+    enabled: true
+    type: LoadBalancer
+    servicePort: 9090
+
+  probeScheme: HTTP
+  livenessProbeInitialDelay: 30
+  livenessProbePeriodSeconds: 15
+  livenessProbeTimeout: 10
+  readinessProbeInitialDelay: 30
+  readinessProbePeriodSeconds: 5
+  readinessProbeTimeout: 4
+
+alertmanager:
+  enabled: false
+
+prometheus-node-exporter:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: false
+
+configmapReload:
+  prometheus:
+    enabled: false
+
+kubeStateMetrics:
+  ## If false, kube-state-metrics sub-chart will not be installed
+  ##
+  enabled: false

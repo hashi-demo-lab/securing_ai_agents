@@ -1,0 +1,156 @@
+global:
+  enabled: true
+  namespace: "${namespace}"
+  tlsDisable: false
+  imagePullSecrets: []
+
+injector:
+  enabled: false
+
+server:
+  enabled: true
+  enterpriseLicense:
+    secretName: "vaultlicense"
+    secretKey: "license"
+
+  image:
+    repository: "hashicorp/vault-enterprise"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+    updateStrategyType: "%{ if vault_mode == "primary" }RollingUpdate%{ else }OnDelete%{ endif }"
+
+  logLevel: "info"
+
+  logFormat: "json"
+
+  resources: {}
+
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    activeService: true
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-ssl-secret: "${namespace}/vault-certificate"
+
+    hosts:
+      - host: "${vault_common_name}"
+    tls:
+      - secretName: vault-certificate
+        hosts:
+          - "${vault_common_name}"
+
+  authDelegator:
+    enabled: true
+
+  readinessProbe:
+    enabled: true
+    path: "/v1/sys/health?standbyok=true&perfstandbyok=true&sealedcode=200&uninitcode=200"
+    port: 8200
+    failureThreshold: 2
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    successThreshold: 1
+    timeoutSeconds: 5
+
+  extraEnvironmentVars:
+    VAULT_CACERT: /vault/tls/ca.crt
+    TZ: "Australia/Sydney"
+  
+  %{ if length(aws_credentials) > 0 }
+  extraSecretEnvironmentVars:
+    - envName: AWS_ACCESS_KEY_ID
+      secretName: aws-credentials
+      secretKey: AWS_ACCESS_KEY_ID
+    - envName: AWS_SECRET_ACCESS_KEY
+      secretName: aws-credentials
+      secretKey: AWS_SECRET_ACCESS_KEY
+    - envName: AWS_SESSION_TOKEN
+      secretName: aws-credentials
+      secretKey: AWS_SESSION_TOKEN
+  %{ endif }
+
+  volumes:
+    - name: vault-tls
+      secret:
+        secretName: "vault-certificate"
+        items:
+          - key: tls.crt
+            path: tls.crt
+          - key: tls.key
+            path: tls.key
+          - key: ca.crt
+            path: ca.crt
+
+  volumeMounts:
+    - name: vault-tls
+      mountPath: /vault/tls
+      readOnly: true
+
+  affinity: ""
+  
+  dataStorage:
+    enabled: true
+    size: 2Gi
+    mountPath: "/vault/data"
+    storageClass: null
+    accessMode: ReadWriteOnce
+    annotations: {}
+    labels: {}
+  
+  auditStorage:
+    enabled: true
+    size: 2Gi
+    mountPath: "/vault/audit"
+    storageClass: null
+    accessMode: ReadWriteOnce
+    annotations: {}
+    labels: {}
+
+  ha:
+    enabled: ${vault_ha_enabled}
+    replicas: ${vault_ha_enabled ? vault_replicas : 1}
+    apiAddr: "https://${vault_common_name}:8200"
+
+    raft:
+      enabled: true
+      setNodeId: true
+      
+      config: |
+        ui = true
+        api_addr = "https://${vault_common_name}:8200"
+        storage "raft" {
+          path = "/vault/data"
+        }
+        
+        listener "tcp" {
+          tls_disable = false
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+          tls_cert_file = "/vault/tls/tls.crt"
+          tls_key_file = "/vault/tls/tls.key"
+          tls_disable_client_certs = false 
+        }
+        
+        telemetry { 
+          unauthenticated_metrics_access = true
+          prometheus_retention_time = "48h"
+          disable_hostname = false
+        }
+
+        %{ if enable_service_registration }
+        service_registration "kubernetes" {}
+        %{ endif }
+
+        %{ if configure_seal }
+        seal "transit" {
+        address      = "https://${auto_unseal_addr}"
+        key_name     = "${auto_unseal_key_name}"
+        token        = "${auto_unseal_token}"
+        mount_path   = "transit/"
+        tls_skip_verify = true
+        }
+        %{ endif }

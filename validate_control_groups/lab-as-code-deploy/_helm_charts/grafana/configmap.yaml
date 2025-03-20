@@ -1,0 +1,37 @@
+- name: Loki
+      type: loki
+      access: proxy
+      orgId: 1
+      url: http://loki.prometheus.svc.cluster.local:3100
+      isDefault: false
+      jsonData:
+        maxLines: 1000
+- name: prometheus
+  type: prometheus
+  access: server
+  orgId: 1
+  url: http://prometheus-server.prometheus.svc.cluster.local:9090
+  isDefault: false
+  version: 1
+  editable: true
+- name: "Infinity"
+  type: "yesoreyeram-infinity-datasource"
+  id: 2
+  uid: "PD0067CAD9A63E081"
+  orgId: 1
+  url: "__IGNORE_URL__"
+  basicAuth: false
+  isDefault: true
+  jsonData:
+    allowedHosts:
+      - "https://vault-active.primary-vault.svc.cluster.local"
+    auth_method: "bearerToken"
+    customHealthCheckEnabled: true
+    customHealthCheckUrl: "https://vault-active.primary-vault.svc.cluster.local:8200/v1/sys/health"
+    global_queries: []
+    oauthPassThru: false
+    tlsSkipVerify: true
+    unsecuredQueryHandling: "allow"
+  readOnly: false
+  secureJsonData:
+    bearerToken: ${VAULT_BEARER_TOKEN}

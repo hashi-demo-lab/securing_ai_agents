@@ -1,0 +1,20 @@
+# Unseal auto-unseal-vault
+export VAULT_ADDR=https://auto-unseal-vault.hashibank.com:443
+vault operator unseal "$(kubectl get secret vault-init-credentials \
+  -n auto-unseal-vault \
+  -o jsonpath='{.data.unseal-key}' | base64 --decode)
+
+# Restart Primary Vault
+kubectl rollout restart statefulset vault -n primary-vault
+
+# Log into Primary Vault with Root Token
+export VAULT_ADDR=https://vault.hashibank.com:443
+vault login "$(kubectl get secret vault-init-credentials \
+  -n primary-vault \
+  -o jsonpath='{.data.root-token}' | base64 --decode)"
+
+# Check Vault Healthh
+vault operator raft list-peers
+vault operator raft autopilot state
+vault read sys/replication/status
+

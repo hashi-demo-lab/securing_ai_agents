@@ -1,0 +1,20 @@
+neo4j:
+  name: neo4j-standalone
+  resources:
+    cpu: "1"
+    memory: "2Gi"
+  password: "Hashi123!"
+  # Uncomment to use enterprise edition
+  #edition: "enterprise"
+  #acceptLicenseAgreement: "yes"
+
+volumes:
+  data:
+    mode: defaultStorageClass
+    defaultStorageClass:
+      requests:
+        storage: 10Gi
+    config:
+      dbms.default_database: “neo4j”
+      dbms.config.strict_validation: “true”
+# helm install neo4j-standalone neo4j/neo4j --namespace neo4j -f values.neo4j.yaml

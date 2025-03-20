@@ -1,0 +1,101 @@
+dn: ou=service-accounts,dc=hashibank,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: service-accounts
+description: Service accounts
+
+dn: ou=groups,dc=hashibank,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+description: groups of users
+
+dn: ou=users,dc=hashibank,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+description: users
+
+dn: cn=developers,ou=groups,dc=hashibank,dc=com
+objectClass: groupOfNames
+objectClass: top
+description: group for developers
+cn: developers
+member: cn=aaron,ou=users,dc=hashibank,dc=com
+
+dn: cn=testers,ou=groups,dc=hashibank,dc=com
+objectClass: groupOfNames
+objectClass: top
+description: group for testers
+cn: testers
+member: cn=tony,ou=users,dc=hashibank,dc=com
+
+dn: cn=administrators,ou=groups,dc=hashibank,dc=com
+objectClass: groupOfNames
+objectClass: top
+description: group for administrators
+cn: administrators
+member: cn=simon,ou=users,dc=hashibank,dc=com
+
+dn: cn=sea,ou=groups,dc=hashibank,dc=com
+objectClass: groupOfNames
+objectClass: top
+description: group for SEA team members
+cn: sea
+member: cn=aaron,ou=users,dc=hashibank,dc=com
+member: cn=simon,ou=users,dc=hashibank,dc=com
+member: cn=tony,ou=users,dc=hashibank,dc=com
+
+dn: cn=service-accounts,ou=groups,dc=hashibank,dc=com
+objectClass: groupOfNames
+objectClass: top
+description: group for service accounts
+cn: service-accounts
+member: cn=svc-account1,ou=service-accounts,dc=hashibank,dc=com
+member: cn=svc-account2,ou=service-accounts,dc=hashibank,dc=com
+member: cn=svc-account3,ou=service-accounts,dc=hashibank,dc=com
+
+dn: cn=aaron,ou=users,dc=hashibank,dc=com
+objectClass: person
+objectClass: top
+cn: aaron
+sn: e
+memberOf: cn=developers,ou=groups,dc=hashibank,dc=com
+userPassword: password
+
+dn: cn=tony,ou=users,dc=hashibank,dc=com
+objectClass: person
+objectClass: top
+cn: tony
+sn: p
+memberOf: cn=testers,ou=groups,dc=hashibank,dc=com
+userPassword: password
+
+dn: cn=simon,ou=users,dc=hashibank,dc=com
+objectClass: person
+objectClass: top
+cn: simon
+sn: l
+memberOf: cn=administrators,ou=groups,dc=hashibank,dc=com
+userPassword: password
+
+dn: cn=svc-account1,ou=service-accounts,dc=hashibank,dc=com
+objectClass: inetOrgPerson
+objectClass: top
+cn: svc-account1
+sn: Service Account 1
+userPassword: password
+
+dn: cn=svc-account2,ou=service-accounts,dc=hashibank,dc=com
+objectClass: inetOrgPerson
+objectClass: top
+cn: svc-account2
+sn: Service Account 2
+userPassword: password
+
+dn: cn=svc-account3,ou=service-accounts,dc=hashibank,dc=com
+objectClass: inetOrgPerson
+objectClass: top
+cn: svc-account3
+sn: Service Account 3
+userPassword: password

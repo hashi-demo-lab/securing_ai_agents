@@ -1,0 +1,86 @@
+replicas: 1
+
+# Define environment variables for plugins
+env:
+  GF_INSTALL_PLUGINS: "yesoreyeram-infinity-datasource"
+
+adminUser: admin
+adminPassword: strongpassword
+
+image:
+  repository: grafana/grafana
+  tag: latest
+  pullPolicy: IfNotPresent
+
+persistence:
+  enabled: false  # Use emptyDir as in your previous setup
+
+service:
+  type: LoadBalancer
+  port: 3000
+
+# Configure the datasources
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      access: proxy
+      orgId: 1
+      url: http://loki.prometheus.svc.cluster.local:3100
+      isDefault: false
+      jsonData:
+        maxLines: 1000
+    - name: prometheus
+      type: prometheus
+      access: server
+      orgId: 1
+      url: http://prometheus-server.prometheus.svc.cluster.local:9090
+      isDefault: false
+      version: 1
+      editable: true
+    - id: 2
+      uid: "PD0067CAD9A63E081"
+      orgId: 1
+      name: "Infinity"
+      type: "yesoreyeram-infinity-datasource"
+      url: "__IGNORE_URL__"
+      basicAuth: false
+      isDefault: true
+      jsonData:
+        allowedHosts:
+          - "https://vault.primary-vault.svc.cluster.local"
+        auth_method: "bearerToken"
+        customHealthCheckEnabled: true
+        customHealthCheckUrl: "https://vault.primary-vault.svc.cluster.local:8200/v1/sys/health"
+        global_queries: []
+        oauthPassThru: false
+        tlsSkipVerify: true
+        unsecuredQueryHandling: "allow"
+      readOnly: false
+      secureJsonData:
+        bearerToken: ${VAULT_BEARER_TOKEN}
+
+# Secrets for sensitive data (replace VAULT_BEARER_TOKEN with an actual reference)
+envValueFrom:
+  VAULT_BEARER_TOKEN:
+    secretKeyRef:
+      name: grafana-token-secret
+      key: token
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: "default"
+        orgId: 1
+        folder: ""
+        type: file
+        disableDeletion: false
+        updateIntervalSeconds: 10
+        options:
+          path: /var/lib/grafana/dashboards/default
+
+dashboardsConfigMaps:
+  default: grafana-dashboards
