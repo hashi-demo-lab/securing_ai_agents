@@ -30,12 +30,12 @@ output "aws_vpc_id" {
 
 output "aws_public_subnet_ids" {
   description = "aws public subnet ids"
-  value       = module.infra-aws.public_subnet_ids
+  value       = module.infra-aws.public_subnets
 }
 
 output "aws_private_subnet_ids" {
   description = "aws privatelic subnet ids"
-  value       = module.infra-aws.private_subnet_ids
+  value       = module.infra-aws.private_subnets
 }
 
 
