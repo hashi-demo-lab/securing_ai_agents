@@ -2,6 +2,7 @@
 **/.terraform/*
 **/temp.txt
 *.pem
+*.tmp
 
 # .tfstate files
 *.tfstate
