@@ -3,7 +3,7 @@
 variable "deployment_name" {
   description = "deployment name to prefix resources"
   type        = string
-  default     = "skoaap"
+  default     = "ai-demo"
 }
 
 // hashicorp cloud platform (hcp) variables
