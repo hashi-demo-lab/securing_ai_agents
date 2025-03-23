@@ -1,0 +1,4 @@
+hcp_client_id = ""
+hcp_client_secret = ""
+hcp_project_id = ""
+aws_region = ""
