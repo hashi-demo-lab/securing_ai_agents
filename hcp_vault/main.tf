@@ -36,6 +36,8 @@ module "vault-hcp" {
   tier            = var.hcp_vault_tier
 }
 
+
+# To remove this ASAP
 resource "local_file" "outputs" {
   content  = jsonencode({
     deployment_id = local.deployment_id,

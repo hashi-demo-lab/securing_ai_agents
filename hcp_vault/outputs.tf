@@ -23,6 +23,22 @@ output "hcp_vault_root_token" {
   sensitive   = true
 }
 
+output "aws_vpc_id" {
+  description = "aws vpc id"
+  value       = module.infra-aws.vpc_id
+}
+
+output "aws_public_subnet_ids" {
+  description = "aws public subnet ids"
+  value       = module.infra-aws.public_subnet_ids
+}
+
+output "aws_private_subnet_ids" {
+  description = "aws privatelic subnet ids"
+  value       = module.infra-aws.private_subnet_ids
+}
+
+
 # output "packer_env_commands" {
 #   description = "lab command helpers"
 #   value = [
