@@ -6,7 +6,7 @@ locals {
 
 module "vpc" {
   source                  = "terraform-aws-modules/vpc/aws"
-  version                 = "~> 5.0"
+  version                 = "~> 5.19"
 
   name                    = var.deployment_id
   cidr                    = var.vpc_cidr
