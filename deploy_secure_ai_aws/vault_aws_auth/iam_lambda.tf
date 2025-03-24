@@ -15,7 +15,6 @@ resource "aws_iam_role" "lambda_vault_role" {
     ]
   })
 
-  #managed_policy_arns = [data.aws_iam_policy.security_compute_access.arn]
   managed_policy_arns = [ data.aws_iam_policy.security_compute_access.arn ]
 
   tags = {
@@ -23,6 +22,46 @@ resource "aws_iam_role" "lambda_vault_role" {
     Purpose     = "Vault Authentication"
   }
 }
+
+### THIS IS NOT RECOMMENDED FOR PRODUCTION USE ###
+## workaround for Doormat ## Vault 
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy" "demo_user_permissions_boundary" {
+  name = "DemoUser"
+}
+
+data "aws_iam_policy" "security_compute_access" {
+  name = "SecurityComputeAccess"
+}
+
+resource "aws_iam_user_policy_attachment" "vault_mount_user" {
+  user       = aws_iam_user.vault_mount_user.name
+  policy_arn = data.aws_iam_policy.demo_user_permissions_boundary.arn
+}
+
+locals {
+  my_email = split("/", data.aws_caller_identity.current.arn)[2]
+}
+
+resource "aws_iam_user" "vault_mount_user" {
+  name                 = "demo-${local.my_email}"
+  permissions_boundary = data.aws_iam_policy.demo_user_permissions_boundary.arn
+  force_destroy        = true
+}
+
+resource "aws_iam_access_key" "vault_mount_user" {
+  user = aws_iam_user.vault_mount_user.name
+}
+
+
+### THIS IS NOT RECOMMENDED FOR PRODUCTION USE ###
+## workaround for Doormat ##
+
+
+
 
 // Policy allowing Lambda to generate temporary credentials for Vault auth
 resource "aws_iam_policy" "lambda_vault_auth" {

@@ -6,48 +6,11 @@ resource "vault_auth_backend" "aws" {
 }
 
 
-
-### THIS IS NOT RECOMMENDED FOR PRODUCTION USE ###
-## workaround for Doormat ##
-data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}
-
-data "aws_iam_policy" "demo_user_permissions_boundary" {
-  name = "DemoUser"
-}
-
-data "aws_iam_policy" "security_compute_access" {
-  name = "SecurityComputeAccess"
-}
-
-resource "aws_iam_user_policy_attachment" "vault_mount_user" {
-  user       = aws_iam_user.vault_mount_user.name
-  policy_arn = data.aws_iam_policy.demo_user_permissions_boundary.arn
-}
-
-locals {
-  my_email = split("/", data.aws_caller_identity.current.arn)[2]
-}
-
-resource "aws_iam_user" "vault_mount_user" {
-  name                 = "demo-${local.my_email}"
-  permissions_boundary = data.aws_iam_policy.demo_user_permissions_boundary.arn
-  force_destroy        = true
-}
-
-resource "aws_iam_access_key" "vault_mount_user" {
-  user = aws_iam_user.vault_mount_user.name
-}
-
 resource "vault_aws_auth_backend_client" "client" {
   backend    = vault_auth_backend.aws.path
   access_key = aws_iam_access_key.vault_mount_user.id
   secret_key = aws_iam_access_key.vault_mount_user.secret
 }
-
-### THIS IS NOT RECOMMENDED FOR PRODUCTION USE ###
-## workaround for Doormat ##
 
 resource "vault_aws_auth_backend_config_identity" "identity_config" {
   backend   = vault_auth_backend.aws.path
