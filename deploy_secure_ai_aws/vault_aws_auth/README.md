@@ -1,5 +1,12 @@
 # Vault AWS Auth Module for Lambda
 
+```zsh
+export VAULT_TOKE="hvs...  "
+terraform init
+terraform plan
+terraform apply
+```
+
 This Terraform module configures HashiCorp Vault with AWS authentication for Lambda functions using the Vault Lambda extension.
 
 ## Features
