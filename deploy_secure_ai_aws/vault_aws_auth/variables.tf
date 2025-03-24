@@ -25,7 +25,7 @@ variable "vault_address" {
 variable "vault_namespace" {
   description = "Namespace of your Vault server (if you are using one)"
   type        = string
-  default     = admin # HCP Vault uses "admin" as the default namespace
+  default     = "admin" # HCP Vault uses "admin" as the default namespace
 }
 
 variable "vault_secret_path" {
