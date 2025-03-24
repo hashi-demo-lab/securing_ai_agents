@@ -15,6 +15,9 @@ resource "aws_iam_role" "lambda_vault_role" {
     ]
   })
 
+  #managed_policy_arns = [data.aws_iam_policy.security_compute_access.arn]
+  managed_policy_arns = [ data.aws_iam_policy.security_compute_access.arn ]
+
   tags = {
     Environment = var.aws_environment_name
     Purpose     = "Vault Authentication"

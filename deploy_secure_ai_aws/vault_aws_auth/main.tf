@@ -26,8 +26,12 @@ resource "aws_iam_user_policy_attachment" "vault_mount_user" {
   policy_arn = data.aws_iam_policy.demo_user_permissions_boundary.arn
 }
 
+locals {
+  my_email = split("/", data.aws_caller_identity.current.arn)[2]
+}
+
 resource "aws_iam_user" "vault_mount_user" {
-  name                 = "demo-${var.aws_environment_name}"
+  name                 = "demo-${local.my_email}"
   permissions_boundary = data.aws_iam_policy.demo_user_permissions_boundary.arn
   force_destroy        = true
 }
