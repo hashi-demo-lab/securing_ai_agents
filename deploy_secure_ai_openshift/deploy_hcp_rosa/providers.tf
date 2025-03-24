@@ -21,7 +21,6 @@ provider "aws" {
 }
 
 provider "rhcs" {
-  token = var.rhcs_token
 }
 
 provider "random" {}
