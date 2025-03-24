@@ -23,7 +23,7 @@ variable "availability_zones" {
 variable "aws_region" {
   description = "AWS region where the ROSA cluster will be deployed"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-southeast-2"
 }
 
 variable "rhcs_token" {
