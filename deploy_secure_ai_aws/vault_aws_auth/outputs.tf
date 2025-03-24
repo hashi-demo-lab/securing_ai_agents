@@ -4,12 +4,6 @@ output "lambda_role_arn" {
   description = "ARN of the IAM role for Lambda with Vault authentication capabilities"
 }
 
-// Output the Lambda function name
-output "lambda_function_name" {
-  value       = aws_lambda_function.vault_auth_example.function_name
-  description = "Name of the Lambda function that will use Vault authentication"
-}
-
 // Output the Vault AWS auth path
 output "vault_auth_path" {
   value       = vault_auth_backend.aws.path
