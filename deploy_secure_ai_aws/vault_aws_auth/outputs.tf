@@ -1,8 +1,15 @@
 // Output the Lambda role ARN to be used in the vault configuration
 output "lambda_role_arn" {
-  value       = aws_iam_role.lambda_vault_role.arn
+  value       = aws_iam_role.lambda.arn
   description = "ARN of the IAM role for Lambda with Vault authentication capabilities"
 }
+
+output "lambda_role_extra_arn" {
+  value       = aws_iam_role.extra_role[0].arn
+  description = "ARN of the IAM role for Lambda using AssumeRole Vault authentication capabilities"
+}
+
+
 
 // Output the Vault AWS auth path
 output "vault_auth_path" {

@@ -43,7 +43,7 @@ resource "vault_aws_auth_backend_role" "lambda_role" {
   backend                  = vault_auth_backend.aws.path
   role                     = "${var.aws_environment_name}-lambda-role"
   auth_type                = "iam"
-  bound_iam_principal_arns = [aws_iam_role.lambda_vault_role.arn]
+  bound_iam_principal_arns = [aws_iam_role.lambda.arn, aws_iam_role.extra_role[0].arn]
   token_ttl                = var.token_ttl
   token_max_ttl            = var.token_max_ttl
   token_policies           = [vault_policy.lambda_policy.name]

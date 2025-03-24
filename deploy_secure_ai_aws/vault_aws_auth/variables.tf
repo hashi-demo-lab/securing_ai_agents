@@ -55,3 +55,9 @@ variable "token_max_ttl" {
     error_message = "Token max TTL must be between 1 and 86400 seconds (24 hours)."
   }
 }
+
+variable "assume_role" {
+  description = "Whether to create an policy for assume role for Lambda to assume"
+  type        = bool
+  default     = true
+}
