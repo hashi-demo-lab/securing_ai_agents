@@ -20,7 +20,12 @@ variable "lambda_role_arn" {
 variable "vault_address" {
   description = "URL of your Vault server"
   type        = string
-  default     = "https://vault.example.com:8200"
+}
+
+variable "vault_namespace" {
+  description = "Namespace of your Vault server (if you are using one)"
+  type        = string
+  default     = admin # HCP Vault uses "admin" as the default namespace
 }
 
 variable "vault_secret_path" {
