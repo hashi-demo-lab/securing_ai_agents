@@ -5,17 +5,17 @@ output "cluster_id" {
 
 output "cluster_domain" {
   description = "Domain name of the ROSA HCP cluster"
-  value       = module.hcp.domain
+  value       = module.hcp.cluster_domain
 }
 
-output "console_url" {
+output "cluster_console_url" {
   description = "URL for the OpenShift web console"
-  value       = module.hcp.console_url
+  value       = module.hcp.cluster_console_url
 }
 
-output "api_url" {
+output "cluster_api_url" {
   description = "URL for the OpenShift API"
-  value       = module.hcp.api_url
+  value       = module.hcp.cluster_api_url
 }
 
 output "htpasswd_username" {

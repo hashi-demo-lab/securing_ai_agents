@@ -6,7 +6,7 @@ module "hcp" {
   openshift_version      = var.openshift_version
   machine_cidr           = var.cidr_block
   aws_subnet_ids         = concat(var.public_subnets, var.private_subnets)
-  aws_availability_zones = module.vpc.availability_zones
+  aws_availability_zones = var.availability_zones
   replicas               = length(var.availability_zones)
 
   // STS configuration

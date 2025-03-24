@@ -37,7 +37,6 @@ variable "hcp_vault_tier" {
 variable "aws_region" {
   description = "aws region"
   type        = string
-  default     = "us-west-1"
 }
 
 // amazon web services (aws) variables
