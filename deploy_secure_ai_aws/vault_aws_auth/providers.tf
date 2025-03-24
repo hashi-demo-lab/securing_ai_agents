@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "~> 3.0"
     }
     aws = {
@@ -9,7 +9,7 @@ terraform {
       version = ">= 5.0"
     }
   }
-  required_version = ">= 1.11"
+  required_version = ">= 1.0"
 }
 # Configure the AWS Provider
 provider "aws" {
@@ -17,4 +17,5 @@ provider "aws" {
 }
 
 provider "vault" {
+  address = var.vault_address
 }
