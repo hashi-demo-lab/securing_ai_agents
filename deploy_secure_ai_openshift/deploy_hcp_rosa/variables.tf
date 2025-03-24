@@ -17,7 +17,7 @@ variable "private_subnets" {
 variable "availability_zones" {
   description = "List of availability zones to deploy the cluster into"
   type        = list(string)
-  default     = ["us-east-1a", "us-east-1b", "us-east-1c"]
+  default     = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
 }
 
 variable "aws_region" {

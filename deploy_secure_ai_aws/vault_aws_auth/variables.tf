@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS Region to be used"
   type        = string
-  default     = "ap-southeast-1"
+  default     = "ap-southeast-2"
 }
 
 variable "aws_environment_name" {
