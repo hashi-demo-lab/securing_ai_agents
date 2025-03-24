@@ -11,12 +11,15 @@ This Terraform module deploys a Red Hat OpenShift Service on AWS (ROSA) with Hos
 
 ## Prerequisites
 
+- You have installed the Red Hat OpenShift Service on AWS (ROSA) command-line interface (CLI) tool.
+On Mac brew install rosa-cli
+- You have your offline Red Hat OpenShift Cluster Manager token.
+- You have installed Terraform version 1.4.6 or newer.
+- You have created your AWS account-wide IAM roles. -->
 - AWS account with appropriate permissions
 - Red Hat Cloud Console account with appropriate subscriptions
-- ROSA CLI installed and configured
-- Terraform v1.0.0+
 
-## Usage
+### Usage
 
 ```hcl
 module "vpc" {
