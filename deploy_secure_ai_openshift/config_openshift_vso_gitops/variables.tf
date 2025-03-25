@@ -1,4 +1,4 @@
-variable "cluster_api_url" {
+variable "host" {
   description = "OpenShift cluster API URL"
   type        = string
 }
