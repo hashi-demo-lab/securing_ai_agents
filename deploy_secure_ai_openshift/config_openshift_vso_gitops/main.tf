@@ -1,7 +1,7 @@
 locals {
-    vault_secrets_operator = file("${path.module}/vault-secrets-operator.yaml")
+    vault_secrets_operator = file("${path.module}/manifests/vault-secrets-operator.yaml")
 
-    openshift_gitops_operator = file("${path.module}/openshift-gitops-operator.yaml")
+    openshift_gitops_operator = file("${path.module}/manifests/openshift-gitops-operator.yaml")
 }
 
 
