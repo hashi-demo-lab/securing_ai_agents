@@ -134,28 +134,3 @@ resource "aws_iam_user" "vault_mount_user" {
 resource "aws_iam_access_key" "vault_mount_user" {
   user = aws_iam_user.vault_mount_user.name
 }
-
-
-
-# // Policy allowing Lambda to generate temporary credentials for Vault auth
-# resource "aws_iam_policy" "lambda_vault_auth" {
-#   name        = "${var.aws_environment_name}-lambda-vault-auth"
-#   description = "Policy allowing Lambda to authenticate with Vault using AWS auth method"
-
-#   policy = jsonencode({
-#     Version = "2012-10-17"
-#     Statement = [
-#       {
-#         Effect   = "Allow"
-#         Action   = "sts:GetCallerIdentity"
-#         Resource = "*"
-#       }
-#     ]
-#   })
-# }
-
-# // Attach the Vault auth policy to the Lambda role
-# resource "aws_iam_role_policy_attachment" "lambda_vault_auth_attachment" {
-#   role       = aws_iam_role.lambda.name
-#   policy_arn = aws_iam_policy.lambda_vault_auth.arn
-# }
