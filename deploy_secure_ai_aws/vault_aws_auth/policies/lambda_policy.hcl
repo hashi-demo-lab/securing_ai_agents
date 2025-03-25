@@ -1,10 +1,10 @@
 # Allow Lambda to read secrets from specific paths
-path "secret/data/lambda/*" {
+path "kv/data/test" {
   capabilities = ["read"]
 }
 
 # Allow Lambda to read specific metadata
-path "secret/metadata/lambda/*" {
+path "kv/metadata/test" {
   capabilities = ["read", "list"]
 }
 

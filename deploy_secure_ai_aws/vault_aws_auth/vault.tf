@@ -71,3 +71,20 @@ resource "vault_aws_auth_backend_role" "lambda_role" {
     }
   }
 }
+
+resource "vault_mount" "kv_secrets" {
+  path        = "kv"
+  type        = "kv"
+  options     = { version = "2" }
+  description = "Key/Value secrets engine for Lambda to read using extensions"
+}
+
+resource "vault_kv_secret_v2" "lambda_secret" {
+  mount = vault_mount.kv_secrets.path
+  name  = "test"
+  data_json = jsonencode({
+    cloud    = "aws",
+    resource = "Lambda",
+    type     = "test"
+  })
+}
