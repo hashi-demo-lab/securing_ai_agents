@@ -10,8 +10,8 @@ resource "vault_aws_auth_backend_client" "client" {
   backend    = vault_auth_backend.aws.path
   access_key = aws_iam_access_key.vault_mount_user.id
   secret_key = aws_iam_access_key.vault_mount_user.secret
-  sts_endpoint = "https://sts.${var.aws_region}.amazonaws.com"
-  sts_region = var.aws_region
+  # sts_endpoint = "https://sts.${var.aws_region}.amazonaws.com"
+  # sts_region = var.aws_region
 }
 
 resource "vault_aws_auth_backend_config_identity" "identity_config" {
