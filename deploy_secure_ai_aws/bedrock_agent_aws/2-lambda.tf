@@ -80,7 +80,7 @@ resource "aws_lambda_function" "this" {
       VAULT_ADDR           = var.vault_addr,
       VAULT_AUTH_ROLE      = data.terraform_remote_state.vault_aws_auth.outputs.lambda_role_id,
       VAULT_AUTH_PROVIDER  = "aws",
-      VAULT_SECRET_PATH_DB = "kv/data/test",
+      VAULT_SECRET_PATH_DB = "${data.terraform_remote_state.vault_aws_auth.outputs.vault_sample_secret_mount_path}/data/${data.terraform_remote_state.vault_aws_auth.outputs.vault_sample_secret_name}",
       VAULT_SECRET_FILE_DB = "/tmp/vault_secret.json",
       VAULT_NAMESPACE      = "admin"
     }
