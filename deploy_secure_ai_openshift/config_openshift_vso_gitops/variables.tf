@@ -26,6 +26,12 @@ variable "enable_vso" {
   default     = false
 }
 
+variable "create_vso_namespace" {
+  description = "Create or use existing namespace for Vault Secrets Operator installation"
+  type        = bool
+  default     = false
+}
+
 variable "vso_namespace" {
   description = "Namespace for Vault Secrets Operator installation"
   type        = string
@@ -34,6 +40,12 @@ variable "vso_namespace" {
 
 variable "enable_gitops" {
   description = "Enable or disable OpenShift GitOps Operator installation"
+  type        = bool
+  default     = true
+}
+
+variable "create_gitops_namespace" {
+  description = "Create or use existing namespace for OpenShift GitOps Operator installation"
   type        = bool
   default     = true
 }

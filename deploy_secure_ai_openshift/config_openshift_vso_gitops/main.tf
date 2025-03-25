@@ -7,7 +7,7 @@ locals {
 
 # HashiCorp Vault Secrets Operator (VSO)
 resource "kubernetes_namespace" "vault" {
-  count = var.enable_vso ? 1 : 0
+  count = var.create_vso_namespace ? 1 : 0
 
   metadata {
     name = var.vso_namespace
@@ -29,7 +29,7 @@ resource "kubernetes_manifest" "vault-operator" {
 
 # Red Hat OpenShift GitOps Operator
 resource "kubernetes_namespace" "gitops_operator" {
-  count = var.enable_gitops ? 1 : 0
+  count = var.create_gitops_namespace ? 1 : 0
 
   metadata {
     name = var.gitops_namespace

@@ -1,0 +1,13 @@
+# Cluster Authentication Details
+cluster_api_url        = ""  # Example: "https://api.cluster-name.domain.com:6443"
+cluster_ca_certificate = ""  # Base64 encoded CA certificate
+client_key            = ""  # Base64 encoded client key
+client_certificate    = ""  # Base64 encoded client certificate
+
+# Vault Secrets Operator Configuration
+enable_vso     = false  # Set to true to enable Vault Secrets Operator
+vso_namespace  = "vault"
+
+# GitOps Configuration
+enable_gitops     = true  # Set to false to disable GitOps Operator
+gitops_namespace  = "openshift-gitops"
