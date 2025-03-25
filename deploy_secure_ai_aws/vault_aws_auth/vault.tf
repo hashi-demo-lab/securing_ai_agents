@@ -40,8 +40,22 @@ locals {
   valid_ttl_values = var.token_max_ttl > var.token_ttl
 }
 
+
+resource "time_sleep" "wait_for_iam" {
+ depends_on = [ aws_iam_role.extra_role ]
+ create_duration  = "10s"
+ destroy_duration = "10s"
+
+ # This ensures that the sleep is re-created when the role assignments change.
+ triggers = {
+   role_assignments = jsonencode(aws_iam_role.extra_role)
+ }
+}
+
+
 // Create a vault role prefixed with AWS environment name
 resource "vault_aws_auth_backend_role" "lambda_role" {
+  depends_on = [ time_sleep.wait_for_iam ]
   backend                  = vault_auth_backend.aws.path
   role                     = "${var.aws_environment_name}-lambda-role"
   auth_type                = "iam"
