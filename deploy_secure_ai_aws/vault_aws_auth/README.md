@@ -1,7 +1,7 @@
 # Vault AWS Auth Module for Lambda
 
 ```zsh
-export VAULT_TOKE="hvs...  "
+export VAULT_TOKEN="hvs..."
 terraform init
 terraform plan
 terraform apply
@@ -39,17 +39,17 @@ module "vault_aws_auth" {
 
   aws_region         = "us-west-2"
   aws_environment_name = "prod"
-  
+
   # Lambda configuration
   lambda_function_name = "my-secure-function"
   lambda_handler       = "app.handler"
   lambda_runtime       = "python3.9"
   lambda_zip_path      = "./lambda_deployment_package.zip"
-  
+
   # Vault configuration
   vault_address        = "https://vault.example.com:8200"
   vault_secret_path    = "secret/data/myapp/config"
-  
+
   # Token configuration
   token_ttl            = 600  # 10 minutes
   token_max_ttl        = 1800  # 30 minutes
@@ -65,7 +65,7 @@ module "vault_aws_auth" {
   aws_region         = "us-west-2"
   aws_environment_name = "prod"
   lambda_role_arn    = "arn:aws:iam::123456789012:role/existing-lambda-role"
-  
+
   # Other Lambda configuration
   lambda_function_name = "my-secure-function"
   lambda_handler       = "app.handler"
@@ -102,4 +102,4 @@ module "vault_aws_auth" {
 | lambda_function_name | Name of the Lambda function that uses Vault authentication |
 | vault_auth_path | Path where the AWS auth method is enabled in Vault |
 | vault_role_name | Name of the role created in Vault for Lambda authentication |
-| vault_policy_name | Name of the Vault policy attached to the Lambda role | 
+| vault_policy_name | Name of the Vault policy attached to the Lambda role |
