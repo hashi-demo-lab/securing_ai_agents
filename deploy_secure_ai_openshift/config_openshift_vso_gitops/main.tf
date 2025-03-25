@@ -6,7 +6,7 @@ locals {
 
 
 # HashiCorp Vault Secrets Operator (VSO)
-resource "kubernetes_namespace" "vault" {
+resource "kubernetes_namespace" "vso" {
   count = var.create_vso_namespace ? 1 : 0
 
   metadata {
@@ -23,9 +23,11 @@ resource "kubernetes_namespace" "vault" {
 }
 
 resource "kubernetes_manifest" "vault-operator" {
+  depends_on = [ kubernetes_namespace.vso ]
   count    = var.enable_vso ? 1 : 0
   manifest = provider::kubernetes::manifest_decode(local.vault_secrets_operator)
 }
+
 
 # Red Hat OpenShift GitOps Operator
 resource "kubernetes_namespace" "gitops_operator" {
@@ -45,7 +47,7 @@ resource "kubernetes_namespace" "gitops_operator" {
 }
 
 resource "kubernetes_manifest" "gitops_operator" {
-  count     = var.enable_gitops ? 1 : 0
   depends_on = [ kubernetes_namespace.gitops_operator ]
+  count     = var.enable_gitops ? 1 : 0
   manifest  = provider::kubernetes::manifest_decode(local.openshift_gitops_operator)
 }
