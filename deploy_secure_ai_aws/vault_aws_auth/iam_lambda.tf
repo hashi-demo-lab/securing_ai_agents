@@ -4,28 +4,10 @@ resource "aws_iam_role" "lambda" {
   assume_role_policy = var.assume_role ? data.aws_iam_policy_document.assume_role_lambda_plus_root[0].json : data.aws_iam_policy_document.assume_role_lambda.json
 }
 
-resource "aws_iam_instance_profile" "lambda" {
-  name = "${var.aws_environment_name}-lambda-instance-profile"
-  role = aws_iam_role.lambda.name
-}
-
-resource "aws_iam_role" "extra_role" {
-  count              = var.assume_role ? 1 : 0
-  name               = "${var.aws_environment_name}-extra-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_lambda_plus_root[0].json
-}
-
 resource "aws_iam_role_policy" "lambda" {
   name   = "${var.aws_environment_name}-lambda-policy"
   role   = aws_iam_role.lambda.id
   policy = var.assume_role ? data.aws_iam_policy_document.lambda_plus_assume_role[0].json : data.aws_iam_policy_document.lambda.json
-}
-
-resource "aws_iam_role_policy" "extra_role_policy" {
-  count  = var.assume_role ? 1 : 0
-  name   = "${var.aws_environment_name}-extra-role-policy"
-  role   = aws_iam_role.extra_role[0].id
-  policy = data.aws_iam_policy_document.lambda_plus_assume_role[0].json
 }
 
 data "aws_iam_policy_document" "assume_role_lambda" {
@@ -59,7 +41,7 @@ data "aws_iam_policy_document" "assume_role_lambda_plus_root" {
   }
 }
 ### THIS IS NOT RECOMMENDED FOR PRODUCTION USE ###
-## workaround for Doormat ## Vault 
+## workaround for Doormat ## Vault
 data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}

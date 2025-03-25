@@ -9,13 +9,6 @@ output "lambda_role_id" {
   description = "ID of the IAM role for Lambda with Vault authentication capabilities"
 }
 
-output "lambda_role_extra_arn" {
-  value       = aws_iam_role.extra_role[0].arn
-  description = "ARN of the IAM role for Lambda using AssumeRole Vault authentication capabilities"
-}
-
-
-
 // Output the Vault AWS auth path
 output "vault_auth_path" {
   value       = vault_auth_backend.aws.path
