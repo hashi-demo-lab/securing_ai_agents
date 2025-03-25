@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "assume_role_lambda_plus_root" {
     }
 
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
     }
   }
@@ -104,8 +104,8 @@ data "aws_iam_policy_document" "lambda_plus_assume_role" {
   }
 
   statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
+    effect    = "Allow"
+    actions   = ["sts:AssumeRole"]
     resources = ["*"]
   }
 }
