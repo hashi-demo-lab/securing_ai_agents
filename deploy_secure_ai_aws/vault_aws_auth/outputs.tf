@@ -4,6 +4,11 @@ output "lambda_role_arn" {
   description = "ARN of the IAM role for Lambda with Vault authentication capabilities"
 }
 
+output "lambda_role_id" {
+  value       = aws_iam_role.lambda.id
+  description = "ID of the IAM role for Lambda with Vault authentication capabilities"
+}
+
 output "lambda_role_extra_arn" {
   value       = aws_iam_role.extra_role[0].arn
   description = "ARN of the IAM role for Lambda using AssumeRole Vault authentication capabilities"
@@ -23,7 +28,7 @@ output "vault_role_name" {
   description = "Name of the role created in Vault for Lambda authentication"
 }
 
-// Output the Vault policy name 
+// Output the Vault policy name
 output "vault_policy_name" {
   value       = vault_policy.lambda_policy.name
   description = "Name of the Vault policy attached to the Lambda role"
