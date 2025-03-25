@@ -19,3 +19,27 @@ variable "client_certificate" {
   type        = string
   sensitive   = true
 }
+
+variable "enable_vso" {
+  description = "Enable or disable Vault Secrets Operator installation"
+  type        = bool
+  default     = false
+}
+
+variable "vso_namespace" {
+  description = "Namespace for Vault Secrets Operator installation"
+  type        = string
+  default     = "vault"
+}
+
+variable "enable_gitops" {
+  description = "Enable or disable OpenShift GitOps Operator installation"
+  type        = bool
+  default     = true
+}
+
+variable "gitops_namespace" {
+  description = "Namespace for OpenShift GitOps Operator installation"
+  type        = string
+  default     = "openshift-gitops"
+}
