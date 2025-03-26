@@ -2,7 +2,6 @@ apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   generateName: openshift-gitops-operator-
-  generation: 1
   name: openshift-gitops-operator-qplqd
   namespace: openshift-gitops-operator
 spec:

@@ -53,5 +53,5 @@ variable "create_gitops_namespace" {
 variable "gitops_namespace" {
   description = "Namespace for OpenShift GitOps Operator installation"
   type        = string
-  default     = "openshift-gitops"
+  default     = "openshift-gitops-operator"
 }
