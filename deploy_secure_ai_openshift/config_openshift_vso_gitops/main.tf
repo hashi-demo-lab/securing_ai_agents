@@ -22,7 +22,7 @@ resource "kubernetes_namespace" "vso" {
   }
 }
 
-resource "kubernetes_manifest" "vault-operator" {
+resource "kubernetes_manifest" "vso" {
   depends_on = [ kubernetes_namespace.vso ]
   count    = var.enable_vso ? 1 : 0
   manifest = provider::kubernetes::manifest_decode(local.vault_secrets_operator)
