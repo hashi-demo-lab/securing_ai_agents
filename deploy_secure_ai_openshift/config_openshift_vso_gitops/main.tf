@@ -2,6 +2,7 @@ locals {
     vault_secrets_operator = file("${path.module}/manifests/vault-secrets-operator.yaml")
 
     openshift_gitops_operator = file("${path.module}/manifests/openshift-gitops-operator.yaml")
+    openshift_gitops_operatorgroup = file("${path.module}/manifests/openshift-gitops-operatorgroup.yaml")
 }
 
 
@@ -44,6 +45,12 @@ resource "kubernetes_namespace" "gitops_operator" {
       metadata.0.annotations["openshift.io/sa.scc.uid-range"]
     ]
   }
+}
+
+resource "kubernetes_manifest" "gitops_operatorgroup" {
+  depends_on = [ kubernetes_namespace.gitops_operator ]
+  count     = var.enable_gitops ? 1 : 0
+  manifest  = provider::kubernetes::manifest_decode(local.openshift_gitops_operatorgroup)
 }
 
 resource "kubernetes_manifest" "gitops_operator" {
