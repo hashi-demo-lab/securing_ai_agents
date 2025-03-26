@@ -1,0 +1,16 @@
+apiVersion: v1
+items:
+- apiVersion: operators.coreos.com/v1
+  kind: OperatorGroup
+  metadata:
+    annotations:
+      olm.providedAPIs: AnalysisRun.v1alpha1.argoproj.io,AnalysisTemplate.v1alpha1.argoproj.io,AppProject.v1alpha1.argoproj.io,Application.v1alpha1.argoproj.io,ApplicationSet.v1alpha1.argoproj.io,ArgoCD.v1alpha1.argoproj.io,ArgoCD.v1beta1.argoproj.io,ClusterAnalysisTemplate.v1alpha1.argoproj.io,Experiment.v1alpha1.argoproj.io,GitopsService.v1alpha1.pipelines.openshift.io,NotificationsConfiguration.v1alpha1.argoproj.io,Rollout.v1alpha1.argoproj.io,RolloutManager.v1alpha1.argoproj.io
+    generateName: openshift-gitops-operator-
+    generation: 1
+    name: openshift-gitops-operator-qplqd
+    namespace: openshift-gitops-operator
+  spec:
+    upgradeStrategy: Default
+kind: List
+metadata:
+  resourceVersion: ""
