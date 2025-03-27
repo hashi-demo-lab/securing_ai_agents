@@ -16,6 +16,6 @@ output "vso_operator_manifest" {
 
 output "gitops_operator_manifest" {
   description = "Applied OpenShift GitOps Operator manifest"
-  value       = try(kubernetes_manifest.gitops_operator[0].manifest, null)
+  value       = try(nonsensitive(kubernetes_manifest.gitops_operator[0].manifest), null)
   sensitive   = true
 }
