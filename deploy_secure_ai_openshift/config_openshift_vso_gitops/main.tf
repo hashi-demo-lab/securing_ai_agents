@@ -1,8 +1,8 @@
 locals {
-    vault_secrets_operator = file("${path.module}/manifests/vault-secrets-operator.yaml")
-
-    openshift_gitops_operator = file("${path.module}/manifests/openshift-gitops-operator.yaml")
+    vault_secrets_operator = file("${path.module}/manifests/vault-secrets-subscription.yaml")
+    openshift_gitops_operator = file("${path.module}/manifests/openshift-gitops-subscription.yaml")
     openshift_gitops_operatorgroup = file("${path.module}/manifests/openshift-gitops-operatorgroup.yaml")
+    openshift_pipelines_operator = file("${path.module}/manifests/openshift-pipelines-subscription.yaml")
 }
 
 
@@ -58,3 +58,11 @@ resource "kubernetes_manifest" "gitops_operator" {
   count     = var.enable_gitops ? 1 : 0
   manifest  = provider::kubernetes::manifest_decode(local.openshift_gitops_operator)
 }
+
+
+# Red Hat OpenShift Pipelines Operator
+resource "kubernetes_manifest" "pipelines_operator" {
+  count     = var.enable_pipelines ? 1 : 0
+  manifest  = provider::kubernetes::manifest_decode(local.openshift_pipelines_operator)
+}
+

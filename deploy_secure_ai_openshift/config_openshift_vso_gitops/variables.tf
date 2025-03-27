@@ -38,6 +38,12 @@ variable "vso_namespace" {
   default     = "vault"
 }
 
+variable "enable_pipelines" {
+  description = "Enable or disable OpenShift Pipelines Operator installation"
+  type        = bool
+  default     = true
+}
+
 variable "enable_gitops" {
   description = "Enable or disable OpenShift GitOps Operator installation"
   type        = bool
