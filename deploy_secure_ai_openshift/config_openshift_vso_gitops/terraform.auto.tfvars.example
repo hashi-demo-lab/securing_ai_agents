@@ -10,4 +10,5 @@ vso_namespace  = "vault"
 
 # GitOps Configuration
 enable_gitops     = true  # Set to false to disable GitOps Operator
-gitops_namespace  = "openshift-gitops"
+gitops_namespace  = "openshift-gitops-operator"
+argocd_namespace = "openshift-gitops"

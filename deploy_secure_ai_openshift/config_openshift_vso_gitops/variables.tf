@@ -72,3 +72,9 @@ variable "argocd_username" {
   type        = string
   default = "admin"
 }
+
+variable "argocd_namespace" {
+  description = "Namespace for ArgoCD installation"
+  type        = string
+  default     = "openshift-gitops"
+}
