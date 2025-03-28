@@ -19,3 +19,9 @@ output "gitops_operator_manifest" {
   value       = try(nonsensitive(kubernetes_manifest.gitops_operator[0].manifest), null)
   sensitive   = true
 }
+
+output "argocd_secret" {
+  description = "ArgoCD secret"
+  value       = try(nonsensitive(kubernetes_secret.argocd[0].data["admin.password"]), null)
+  sensitive   = true
+}
