@@ -3,7 +3,7 @@
 data "kubernetes_secret" "argocd" {
   count = var.enable_gitops ? 1 : 0
   metadata {
-    name = "argocd-secret"
+    name = "openshift-gitops-cluster"
     namespace = "${var.gitops_namespace}"
   }
 }

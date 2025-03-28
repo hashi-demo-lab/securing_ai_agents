@@ -10,6 +10,14 @@ provider "kubernetes" {
 
 provider "argocd" {
   # Configuration options
-  core = true
+  server_addr = var.argocd_server_addr
+  username    = var.argocd_username
+  password    = data.kubernetes_secret.argocd[0].data["admin.password"]
+  insecure    = true
+}
 
+
+
+resource "argocd_repository" "public_git" {
+  repo = "git@github.com:hashi-demo-lab/securing_ai_agents.git"
 }

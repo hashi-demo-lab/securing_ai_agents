@@ -61,3 +61,14 @@ variable "gitops_namespace" {
   type        = string
   default     = "openshift-gitops-operator"
 }
+
+variable "argocd_server_addr" {
+  description = "ArgoCD server address"
+  type        = string
+}
+
+variable "argocd_username" {
+  description = "ArgoCD username"
+  type        = string
+  default = "admin"
+}
