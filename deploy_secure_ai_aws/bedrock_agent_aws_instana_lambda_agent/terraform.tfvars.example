@@ -1,0 +1,4 @@
+region            = "us-east-1"
+foundation_model  = "amazon.titan-text-premier-v1:0"
+VAULT_ADDR        = "https://<CLUSTER_URL>:8200"
+instana_agent_key = "<AGENT_KEY>" # Can be potentially integrated with Vault and TFC
