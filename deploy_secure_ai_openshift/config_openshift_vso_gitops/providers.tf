@@ -17,15 +17,3 @@ provider "argocd" {
 }
 
 
-resource "argocd_repository" "public_nginx_helm" {
-  repo = "https://helm.nginx.com/stable"
-  name = "nginx-stable"
-  type = "helm"
-}
-
-# # Public Git repository
-resource "argocd_repository" "public_git" {
-  repo = "https://github.com/hashi-demo-lab/securing_ai_agents.git"
-  type = "git"
-  #project = "default"
-}
