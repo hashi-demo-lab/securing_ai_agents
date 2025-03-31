@@ -15,10 +15,9 @@ resource "argocd_application" "app" {
       dynamic "helm" {
         for_each = var.helm_params != null ? [var.helm_params] : []
         content {
-          value_files = helm.value.value_files
-          values      = helm.value.values
-          parameters  = helm.value.parameters
-          release_name = helm.value.release_name
+          value_files  = helm.value["value_files"]
+          values       = helm.value["values"]
+          release_name = helm.value["release_name"]
         }
       }
     }

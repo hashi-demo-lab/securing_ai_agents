@@ -3,6 +3,11 @@ variable "app_name" {
   type        = string
 }
 
+variable "project_name" {
+  description = "ArgoCD project to which the application belongs"
+  type        = string
+}
+
 variable "namespace" {
   description = "Target namespace where the application will be deployed"
   type        = string

@@ -5,7 +5,7 @@ output "application_name" {
 
 output "application_namespace" {
   description = "Target namespace of the application"
-  value       = argocd_application.app.spec[0].destination[0].namespace
+  value       = [for d in argocd_application.app.spec[0].destination : d.namespace][0]
 }
 
 output "sync_status" {
