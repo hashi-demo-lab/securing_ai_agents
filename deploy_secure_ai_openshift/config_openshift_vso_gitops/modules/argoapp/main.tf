@@ -1,19 +1,54 @@
-resource "argocd_application" "app" {
+# Create an ArgoCD project
+resource "argocd_project" "project" {
   metadata {
-    name      = var.app_name
+    name      = var.project_name
     namespace = var.namespace
   }
 
   spec {
-    project = var.project_name
+    description = var.project_description
+
+    source_repos = var.source_repos
+
+    # Define allowed destinations
+    dynamic "destination" {
+      for_each = var.project_destinations
+      content {
+        server    = destination.value.server
+        namespace = destination.value.namespace
+      }
+    }
+    
+    # Define cluster resource whitelist
+    dynamic "cluster_resource_whitelist" {
+      for_each = var.cluster_resource_whitelist
+      content {
+        group = cluster_resource_whitelist.value.group
+        kind  = cluster_resource_whitelist.value.kind
+      }
+    }
+  }
+}
+
+# Create multiple ArgoCD applications
+resource "argocd_application" "app" {
+  for_each = var.applications
+  
+  metadata {
+    name      = each.key
+    namespace = var.namespace
+  }
+
+  spec {
+    project = argocd_project.project.metadata[0].name
 
     source {
-      repo_url        = var.repo_url
-      path           = var.repo_path
-      target_revision = var.repo_branch
+      repo_url        = lookup(each.value, "repo_url", var.default_repo_url)
+      path            = each.value.path
+      target_revision = lookup(each.value, "target_revision", var.default_target_revision)
 
       dynamic "helm" {
-        for_each = var.helm_params != null ? [var.helm_params] : []
+        for_each = lookup(each.value, "helm_params", null) != null ? [each.value.helm_params] : []
         content {
           value_files  = helm.value["value_files"]
           values       = helm.value["values"]
@@ -23,21 +58,23 @@ resource "argocd_application" "app" {
     }
 
     destination {
-      server    = var.destination_server
-      namespace = var.namespace
+      server    = lookup(each.value, "destination_server", var.default_destination_server)
+      namespace = lookup(each.value, "namespace", var.namespace)
     }
 
     sync_policy {
       dynamic "automated" {
-        for_each = var.sync_policy.automated != null ? [var.sync_policy.automated] : []
+        for_each = lookup(each.value, "automated", null) != null ? [each.value.automated] : []
         content {
-          prune       = automated.value.prune
-          self_heal   = automated.value.self_heal
-          allow_empty = automated.value.allow_empty
+          prune       = lookup(automated.value, "prune", false)
+          self_heal   = lookup(automated.value, "self_heal", false)
+          allow_empty = lookup(automated.value, "allow_empty", false)
         }
       }
 
-      sync_options = var.sync_policy.sync_options
+      sync_options = lookup(each.value, "sync_options", [])
     }
   }
+  
+  depends_on = [argocd_project.project]
 } 

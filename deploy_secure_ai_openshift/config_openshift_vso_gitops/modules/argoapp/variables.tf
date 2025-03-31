@@ -1,70 +1,81 @@
-variable "app_name" {
-  description = "Name of the ArgoCD application"
+variable "namespace" {
+  description = "Namespace for ArgoCD resources"
   type        = string
+  default     = "argocd"
 }
 
 variable "project_name" {
-  description = "ArgoCD project to which the application belongs"
+  description = "Name of the ArgoCD project"
   type        = string
 }
 
-variable "namespace" {
-  description = "Target namespace where the application will be deployed"
+variable "project_description" {
+  description = "Description of the ArgoCD project"
+  type        = string
+  default     = "Project created by Terraform"
+}
+
+variable "source_repos" {
+  description = "List of allowed source repositories"
+  type        = list(string)
+  default     = ["*"]
+}
+
+variable "project_destinations" {
+  description = "List of allowed destinations for applications in this project"
+  type = list(object({
+    server    = string
+    namespace = string
+  }))
+  default = [
+    {
+      server    = "https://kubernetes.default.svc"
+      namespace = "*"
+    }
+  ]
+}
+
+variable "cluster_resource_whitelist" {
+  description = "List of allowed cluster resources"
+  type = list(object({
+    group = string
+    kind  = string
+  }))
+  default = [
+    {
+      group = "*"
+      kind  = "*"
+    }
+  ]
+}
+
+variable "default_repo_url" {
+  description = "Default repository URL for applications"
   type        = string
 }
 
-variable "repo_url" {
-  description = "Git repository URL containing the application manifests"
+variable "default_target_revision" {
+  description = "Default target revision (branch, tag, commit) for applications"
   type        = string
+  default     = "HEAD"
 }
 
-variable "repo_path" {
-  description = "Path within the Git repository containing the application manifests"
-  type        = string
-}
-
-variable "repo_branch" {
-  description = "Git branch to use"
-  type        = string
-  default     = "main"
-}
-
-variable "destination_server" {
-  description = "Destination cluster API server URL"
+variable "default_destination_server" {
+  description = "Default destination server for applications"
   type        = string
   default     = "https://kubernetes.default.svc"
 }
 
-variable "sync_policy" {
-  description = "Application sync policy configuration"
-  type = object({
-    automated = optional(object({
-      prune       = optional(bool, true)
-      self_heal   = optional(bool, true)
-      allow_empty = optional(bool, false)
-    }), {})
-    sync_options = optional(list(string), ["CreateNamespace=true"])
-  })
-  default = {
-    automated = {
-      prune       = true
-      self_heal   = true
-      allow_empty = false
-    }
-    sync_options = ["CreateNamespace=true"]
-  }
-} 
-
-variable "helm_params" {
-  description = "Helm specific parameters for the application"
-  type = object({
-    value_files  = optional(list(string), [])
-    values       = optional(string, "")
-    parameters   = optional(list(object({
-      name  = string
-      value = string
-    })), [])
-    release_name = optional(string, null)
-  })
-  default = null
+variable "applications" {
+  description = "Map of ArgoCD applications to create where the key is the application name"
+  type = map(object({
+    path               = string
+    repo_url           = optional(string)
+    target_revision    = optional(string)
+    destination_server = optional(string)
+    namespace          = optional(string)
+    helm_params        = optional(map(any))
+    automated          = optional(map(bool))
+    sync_options       = optional(list(string))
+  }))
 } 
