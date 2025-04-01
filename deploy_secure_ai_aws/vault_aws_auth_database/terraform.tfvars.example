@@ -1,0 +1,6 @@
+vault_address = ""
+vault_namespace = "admin
+aws_region = "ap-southeast-1"
+
+
+# export VAULT_TOKEN=""
