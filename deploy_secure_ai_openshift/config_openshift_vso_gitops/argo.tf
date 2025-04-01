@@ -36,7 +36,7 @@ resource "argocd_application" "demo_langflow" {
     }
     destination {
       server = "https://kubernetes.default.svc"
-      namespace = "${var.langflow_namespace}"
+      namespace = "test_langflow"
     }
     sync_policy {
       automated {

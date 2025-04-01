@@ -78,3 +78,36 @@ variable "argocd_namespace" {
   type        = string
   default     = "openshift-gitops"
 }
+
+
+variable "applications" {
+  description = "Map of ArgoCD applications to create where the key is the application name"
+  type = map(object({
+    app_name           = string
+    environment        = string
+    path               = string
+    repo_url           = optional(string)
+    target_revision    = optional(string)
+    destination_server = optional(string)
+    namespace          = optional(string)
+    helm_params        = optional(map(any))
+    automated          = optional(map(bool))
+    sync_options       = optional(list(string))
+  }))
+} 
+
+
+
+# Vault variables
+
+
+variable "k8s_jwt_auth_backend" {
+  description = "Vault JWT authentication backend name used for Kubernetes"
+  type        = string
+  default     = "jwt"
+}
+
+variable "k8s_bound_audience" {
+  type        = string
+  default = "https://kubernetes.default.svc"
+}
