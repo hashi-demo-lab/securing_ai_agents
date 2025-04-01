@@ -16,4 +16,8 @@ provider "argocd" {
   insecure    = true
 }
 
+provider "github" {
+  # Configuration options
+  owner = var.github_organization
 
+}

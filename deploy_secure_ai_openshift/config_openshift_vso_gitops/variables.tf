@@ -111,3 +111,12 @@ variable "k8s_bound_audience" {
   type        = string
   default = "https://kubernetes.default.svc"
 }
+
+
+#Github variables
+variable "github_organization" {
+  description = "GitHub organization name"
+  type        = string
+  default     = "hashi-demo-lab"
+}
+

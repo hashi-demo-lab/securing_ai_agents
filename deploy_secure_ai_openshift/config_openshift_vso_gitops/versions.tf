@@ -3,12 +3,17 @@ terraform {
     
     kubernetes = {
       source = "hashicorp/kubernetes"
-      version = "~> 2.36"
+      version = "~> 2.0"
     }
 
     argocd = {
       source = "argoproj-labs/argocd"
-      version = "~> 7.5.2"
+      version = "~> 7.5"
+    }
+
+    github = {
+      source = "integrations/github"
+      version = "~> 6.6"
     }
 
   }
