@@ -43,3 +43,6 @@ terraform.rc
 
 # Lambda zip files
 zipped
+
+# Mac
+.DS_Store
