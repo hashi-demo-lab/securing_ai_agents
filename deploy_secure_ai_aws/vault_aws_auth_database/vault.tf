@@ -127,9 +127,25 @@ resource "vault_database_secret_backend_role" "lambda_function" {
   db_name     = vault_database_secret_backend_connection.postgres.name
   default_ttl = 1
   max_ttl     = 24
+  # creation_statements = [<<EOT
+  #   CREATE ROLE "{{name}}" WITH LOGIN ENCRYPTED PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
+  #   GRANT CREATE, USAGE ON SCHEMA public TO "{{name}}";
+  #   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT ON TABLES TO "{{name}}";
+  #   GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO "{{name}}";
+  # EOT
+  # ]
   creation_statements = [<<EOT
     CREATE ROLE "{{name}}" WITH LOGIN ENCRYPTED PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';
-    GRANT SELECT ON ALL TABLES IN SCHEMA public TO "{{name}}";
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT ON TABLES TO PUBLIC;
+    GRANT CREATE, USAGE ON SCHEMA public TO "{{name}}";
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "{{name}}";
+    CREATE TABLE IF NOT EXISTS public.city_dishes (
+        id SERIAL PRIMARY KEY,
+        city VARCHAR(255) NOT NULL UNIQUE,
+        dish VARCHAR(255) NOT NULL
+    );
+    GRANT SELECT, INSERT ON ALL TABLES IN SCHEMA public TO "{{name}}";
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO "{{name}}";
   EOT
   ]
 }

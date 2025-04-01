@@ -36,32 +36,27 @@ def lambda_handler(event, context):
     except Exception as e:
         logging.error("Database connection error: %s", str(e))
 
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("SELECT usename FROM pg_catalog.pg_user")
-            logging.info("Users:")
-            logging.info(cursor.fetchall())
-    except Exception as e:
-        logging.error("Error querying database: %s", str(e))
+    # try:
+    #     with conn.cursor() as cursor:
+    #         cursor.execute("SELECT usename FROM pg_catalog.pg_user")
+    #         logging.info("Users:")
+    #         logging.info(cursor.fetchall())
+    # except Exception as e:
+    #     logging.error("Error querying database: %s", str(e))
 
     for param in parameters:
         if param['name'] == 'city':
             city = param['value']
 
-    city_to_dish = {
-        "new york": "New York-style pizza",
-        "paris": "Croissant",
-        "tokyo": "Sushi",
-        "bangkok": "Pad Thai",
-        "mumbai": "Vada Pav",
-        "rome": "Pasta Carbonara",
-        "istanbul": "Kebap",
-        "beijing": "Peking Duck",
-        "mexico city": "Tacos al Pastor",
-        "london": "Fish and Chips"
-    }
+    food = f"No dish found for the city: {city.title()}"
 
-    food = city_to_dish.get(city.lower(), f"No dish found for the city: {city.title()}")
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(f"SELECT * FROM public.city_dishes WHERE city='{city.title()}';")
+            food_raw = cursor.fetchall()
+            food = food_raw[0][2]
+    except Exception as e:
+        logging.error("Error querying database: %s", str(e))
 
     logging.info(f'City: {city}. Food detected: {food}')
 

@@ -21,6 +21,7 @@ data "aws_iam_policy_document" "lambda_cloudwatch" {
     ]
     resources = [
       "${aws_cloudwatch_log_group.lambda.arn}:*",
+      "${aws_cloudwatch_log_group.seed_lambda.arn}:*", # For seed Lambda
     ]
   }
 }
@@ -68,6 +69,20 @@ resource "aws_lambda_layer_version" "aws-psycopg2" {
   compatible_runtimes = ["python3.10"]
 
   source_code_hash = data.archive_file.aws-psycopg2_layer_zip.output_base64sha256
+}
+
+data "archive_file" "rds_ssl_zip" {
+  type        = "zip"
+  source_dir  = "./dependencies/rds-ssl"
+  output_path = "./dependencies/zipped/rds-ssl.zip"
+}
+
+resource "aws_lambda_layer_version" "rds_ssl" {
+  filename            = data.archive_file.rds_ssl_zip.output_path
+  layer_name          = "rds-ssl-python"
+  compatible_runtimes = ["python3.10"]
+
+  source_code_hash = data.archive_file.rds_ssl_zip.output_base64sha256
 }
 
 data "archive_file" "lambda_function" {
