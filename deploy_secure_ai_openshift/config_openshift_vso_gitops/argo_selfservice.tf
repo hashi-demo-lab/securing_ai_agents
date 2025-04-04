@@ -30,13 +30,7 @@ resource "github_repository" "team_repos" {
 
   visibility = each.value.repo_visibility
 }
-# # Kubernetes Namespaces
-# resource "kubernetes_namespace" "team_namespaces" {
-#   for_each = var.teams
-#   metadata {
-#     name = each.value.namespace_name
-#   }
-# }
+
 
 # Argo CD Projects
 resource "argocd_project" "team_projects" {
@@ -55,53 +49,53 @@ resource "argocd_project" "team_projects" {
   }
 }
 
-# Argo CD ApplicationSets
-resource "argocd_application_set" "team_appsets" {
-  for_each = var.teams
+# # Argo CD ApplicationSets
+# resource "argocd_application_set" "team_appsets" {
+#   for_each = var.teams
 
-  metadata {
-    name      = "${each.key}-appset"
-    namespace = "argocd"
-  }
+#   metadata {
+#     name      = "${each.key}-appset"
+#     namespace = "argocd"
+#   }
 
-  spec {
+#   spec {
     
-    generator {
-      git {
-        repo_url  = "https://github.com/${each.value.repo_owner}/${each.value.repo_name}.git"
-        revision  = "HEAD"
-        directory {
-          path = "*" # find all applications in the team's repo
-        }
-      }
-    }
+#     generator {
+#       git {
+#         repo_url  = "https://github.com/${each.value.repo_owner}/${each.value.repo_name}.git"
+#         revision  = "HEAD"
+#         directory {
+#           path = "*" # find all applications in the team's repo
+#         }
+#       }
+#     }
 
-    template {
-      metadata {
-        name      = "{{path.basename}}"
-        namespace = "argocd"
-      }
-      spec {
-        project = "${each.key}-project"
-        source {
-          repo_url        = "https://github.com/${each.value.repo_owner}/${each.value.repo_name}.git"
-          target_revision = "HEAD"
-          path            = "{{path.path}}"
-        }
-        destination {
-          server    = "https://kubernetes.default.svc"
-          namespace = each.value.namespace_name
-        }
-        sync_policy {
-          automated {
-            prune      = true
-            self_heal  = true
-          }
-        }
-      }
-    }
-  }
-}
+#     template {
+#       metadata {
+#         name      = "{{path.basename}}"
+#         namespace = "argocd"
+#       }
+#       spec {
+#         project = "${each.key}-project"
+#         source {
+#           repo_url        = "https://github.com/${each.value.repo_owner}/${each.value.repo_name}.git"
+#           target_revision = "HEAD"
+#           path            = "{{path.path}}"
+#         }
+#         destination {
+#           server    = "https://kubernetes.default.svc"
+#           namespace = each.value.namespace_name
+#         }
+#         sync_policy {
+#           automated {
+#             prune      = true
+#             self_heal  = true
+#           }
+#         }
+#       }
+#     }
+#   }
+# }
 
 # # Kubernetes RBAC (Example: granting edit access to team namespaces)
 # resource "kubernetes_role_binding" "team_deploy_access" {
