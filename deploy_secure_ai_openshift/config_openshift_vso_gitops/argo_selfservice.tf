@@ -4,22 +4,31 @@ variable "teams" {
     name           = string
     repo_name      = string
     repo_visibility = string
-    namespace_name = string
+    namespaces     = list(string)
   }))
   default = {
     "team-a" = {
       name     = "team-a"
-      namespace_name = "team-a"
+      namespaces = ["app1", "app2"]
       repo_visibility = "public"
       repo_name      = "team-a-repo"
       
     },
     "team-b" = {
       name     = "team-a"
-      namespace_name = "team-a"
+      namespaces = ["app3", "app4"]
       repo_visibility = "public"
       repo_name      = "team-b-repo" 
      },
+  }
+
+  validation {
+    condition = length(distinct(flatten([
+      for team in var.teams : team.namespaces
+    ]))) == length(flatten([
+      for team in var.teams : team.namespaces
+    ]))
+    error_message = "Namespaces must be unique across all teams. Found duplicate namespace names."
   }
 }
 
@@ -39,9 +48,12 @@ resource "argocd_project" "team_projects" {
     name = "${each.key}-project"
   }
   spec {
-    destination {
-      server    = "https://kubernetes.default.svc"
-      namespace = each.value.namespace_name
+    dynamic "destination" {
+      for_each = each.value.namespaces
+      content {
+        server    = "https://kubernetes.default.svc"
+        namespace = destination.value
+      }
     }
     source_repos = [
       "https://github.com/${each.value.repo_owner}/${each.value.repo_name}.git",
