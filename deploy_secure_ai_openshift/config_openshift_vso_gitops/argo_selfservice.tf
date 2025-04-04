@@ -2,25 +2,25 @@
 variable "teams" {
   type = map(object({
     name           = string
-    repo_name      = string
+    repo_owner     = string
     repo_visibility = string
     namespaces     = list(string)
   }))
   default = {
     "team-a" = {
-      name     = "team-a"
+      team_name     = "team-a"
       namespaces = ["app1", "app2"]
       repo_visibility = "public"
-      repo_owner    = "${var.organization}"
-      repo_name      = "team-a-repo"
+      repo_owner    = "hashi-demo-lab"
+      repo_name      = "team-a-repo-openshift-gitops"
       
     },
     "team-b" = {
-      name     = "team-a"
+      team_name     = "team-b"
       namespaces = ["app3", "app4"]
       repo_visibility = "public"
-      repo_owner    = "${var.organization}"
-      repo_name      = "team-b-repo" 
+      repo_owner    =  "hashi-demo-lab"
+      repo_name      = "team-b-repo-openshift-gitops" 
      },
   }
 
