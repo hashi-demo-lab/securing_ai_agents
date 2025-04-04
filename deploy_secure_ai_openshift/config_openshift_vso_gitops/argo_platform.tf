@@ -23,7 +23,7 @@ variable "platform_namespaces" {
 variable "platform_project_name" {
   description = "Name of the Argo CD project"
   type        = string
-  default     = "platform-project"
+  default     = "platform"
 }
 
 # Argo CD Projects
