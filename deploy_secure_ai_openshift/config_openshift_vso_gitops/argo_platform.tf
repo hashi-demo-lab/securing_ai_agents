@@ -9,6 +9,7 @@ variable "platform_namespaces" {
   type=set(string)
   default = [
     "argocd",
+    "default",
     "openshift-gitops",
     "openshift-operators",
     "openshift-logging",
@@ -36,6 +37,7 @@ resource "argocd_project" "platform" {
     dynamic "destination" {
       for_each = var.platform_namespaces
       content {
+        name = "in-cluster"
         server    = "https://kubernetes.default.svc"
         namespace = destination.key
       }
@@ -55,7 +57,7 @@ resource "argocd_repository" "platform_repo" {
 
 
 # Define the Parent "App of Apps" Application
-resource "argocd_application" "app_of_apps_platform" {
+resource "argocd_application" "platform" {
   metadata {
     # Name of this parent application in Argo CD UI
     name      = "platform"
@@ -79,8 +81,8 @@ resource "argocd_application" "app_of_apps_platform" {
     }
 
     # Destination where the *child Application CRDs* defined in the source path
-    # will be created. This should be the Argo CD namespace itself.
     destination {
+      name      = "in-cluster" 
       server    = "https://kubernetes.default.svc" # Target cluster API server
       namespace = "default"                         # Child Application CRDs go here
     }
@@ -91,7 +93,6 @@ resource "argocd_application" "app_of_apps_platform" {
     # Synchronization Policy for the parent app itself
     sync_policy {
       # Automated sync ensures child apps are automatically created/updated/deleted
-      # based on the manifests found in the Git repository path.
       automated {
         prune      = true # Remove child apps if their definition is removed from Git
         self_heal  = true # Correct drift if someone manually changes the parent app definition
