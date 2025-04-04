@@ -4,26 +4,74 @@ locals {
 }
 
 
+variable "platform_namespaces" {
+  description = "Map of platform namespaces to be created"
+  type=set(string)
+  default = [
+    "argocd",
+    "openshift-gitops",
+    "openshift-operators",
+    "openshift-logging",
+    "openshift-monitoring",
+    "openshift-user-workload-monitoring",
+    "openshift-virtualization",
+    "kube-system"
+  ]
+}
+
+variable "platform_project_name" {
+  description = "Name of the Argo CD project"
+  type        = string
+  default     = "platform-project"
+}
+
+# Argo CD Projects
+resource "argocd_project" "platform" {
+
+  metadata {
+    name = "${var.platform_project_name}"
+  }
+  spec {
+    description = "platform team cluster project"
+    dynamic "destination" {
+      for_each = var.platform_namespaces
+      content {
+        server    = "https://kubernetes.default.svc"
+        namespace = destination.key
+      }
+    }
+    source_repos = [
+      "${local.repo_url}" # The Git repository URL,
+    ]
+  }
+}
+
+# Git repository - demo app
+resource "argocd_repository" "platform_repo" {
+  repo = local.repo_url
+  type = "git"
+}
+
+
+
 # Define the Parent "App of Apps" Application
 resource "argocd_application" "app_of_apps_platform" {
   metadata {
     # Name of this parent application in Argo CD UI
-    name      = "app-of-apps-platform"
+    name      = "platform"
     # Namespace where Argo CD is running and Application CRDs exist
     namespace = "argocd"
   }
 
   spec {
-    # Source repository containing the child application definitions
     source {
       repo_url = local.repo_url # The Git repository URL
+
       # The path within the repo where child app manifests are located
       path = local.path
       # Branch/tag/commit to track
-      target_revision = "main" # Or "main", "master", a specific tag/commit
+      target_revision = "HEAD"
 
-      # --- Key for App of Apps ---
-      # Recursively search for application manifests in the path
       directory {
         recurse = true
       }
@@ -34,11 +82,11 @@ resource "argocd_application" "app_of_apps_platform" {
     # will be created. This should be the Argo CD namespace itself.
     destination {
       server    = "https://kubernetes.default.svc" # Target cluster API server
-      namespace = "argocd"                         # Child Application CRDs go here
+      namespace = "default"                         # Child Application CRDs go here
     }
 
     # Argo CD Project this application belongs to
-    project = "default" # Change if you use a different Argo CD project
+    project = argocd_project.platform.metadata[0].name # Change if you use a different Argo CD project
 
     # Synchronization Policy for the parent app itself
     sync_policy {
