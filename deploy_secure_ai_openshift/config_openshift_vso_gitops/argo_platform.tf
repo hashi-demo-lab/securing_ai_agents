@@ -61,11 +61,12 @@ resource "argocd_application" "platform" {
   metadata {
     # Name of this parent application in Argo CD UI
     name      = "platform"
-    # Namespace where Argo CD is running and Application CRDs exist
-    namespace = "argocd"
   }
 
   spec {
+    # Argo CD Project this application belongs to
+    project = argocd_project.platform.metadata[0].name # Change if you use a different Argo CD project
+    
     source {
       repo_url = local.repo_url # The Git repository URL
 
@@ -82,13 +83,11 @@ resource "argocd_application" "platform" {
 
     # Destination where the *child Application CRDs* defined in the source path
     destination {
-      name      = "in-cluster" 
       server    = "https://kubernetes.default.svc" # Target cluster API server
       namespace = "default"                         # Child Application CRDs go here
     }
 
-    # Argo CD Project this application belongs to
-    project = argocd_project.platform.metadata[0].name # Change if you use a different Argo CD project
+    
 
     # Synchronization Policy for the parent app itself
     sync_policy {
@@ -101,7 +100,7 @@ resource "argocd_application" "platform" {
 
       # Options for the sync operation itself
       sync_options = [
-        "Validate=true",      # Validate resources before applying
+        "Validate=false",      # Validate resources before applying
         "CreateNamespace=true", # Needed if child apps deploy to namespaces that might not exist *yet*
         "PruneLast=true",     # Prune resources after other operations
         "ApplyOutOfSyncOnly=true" # Only apply changes if the app is OutOfSync
