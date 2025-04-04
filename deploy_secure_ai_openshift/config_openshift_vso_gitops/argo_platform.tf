@@ -84,7 +84,7 @@ resource "argocd_application" "platform" {
     # Destination where the *child Application CRDs* defined in the source path
     destination {
       server    = "https://kubernetes.default.svc" # Target cluster API server
-      namespace = "default"                         # Child Application CRDs go here
+      namespace = "argocd"                         # Child Application CRDs go here
     }
 
     
