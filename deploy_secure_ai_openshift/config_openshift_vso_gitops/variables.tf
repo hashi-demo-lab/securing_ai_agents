@@ -80,21 +80,21 @@ variable "argocd_namespace" {
 }
 
 
-variable "applications" {
-  description = "Map of ArgoCD applications to create where the key is the application name"
-  type = map(object({
-    app_name           = string
-    environment        = string
-    path               = string
-    repo_url           = optional(string)
-    target_revision    = optional(string)
-    destination_server = optional(string)
-    namespace          = optional(string)
-    helm_params        = optional(map(any))
-    automated          = optional(map(bool))
-    sync_options       = optional(list(string))
-  }))
-} 
+# variable "applications" {
+#   description = "Map of ArgoCD applications to create where the key is the application name"
+#   type = map(object({
+#     app_name           = string
+#     environment        = string
+#     path               = string
+#     repo_url           = optional(string)
+#     target_revision    = optional(string)
+#     destination_server = optional(string)
+#     namespace          = optional(string)
+#     helm_params        = optional(map(any))
+#     automated          = optional(map(bool))
+#     sync_options       = optional(list(string))
+#   }))
+# } 
 
 
 

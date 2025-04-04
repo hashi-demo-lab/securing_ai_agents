@@ -11,6 +11,7 @@ variable "teams" {
       name     = "team-a"
       namespaces = ["app1", "app2"]
       repo_visibility = "public"
+      repo_owner    = "${var.organization}"
       repo_name      = "team-a-repo"
       
     },
@@ -18,6 +19,7 @@ variable "teams" {
       name     = "team-a"
       namespaces = ["app3", "app4"]
       repo_visibility = "public"
+      repo_owner    = "${var.organization}"
       repo_name      = "team-b-repo" 
      },
   }
