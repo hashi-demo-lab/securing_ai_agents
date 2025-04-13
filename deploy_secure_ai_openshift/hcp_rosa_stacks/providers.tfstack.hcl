@@ -13,6 +13,18 @@ required_providers {
     source = "hashicorp/time"
     version = "~> 0.1"
   }
+  random = {
+    source = "hashicorp/random"
+    version = "~> 3.0"
+  }
+  null = {
+    source = "hashicorp/null"
+    version = "~> 3.0"
+  }
+  rhcss = {
+    source = "hashicorp/rhcss"
+    version = "~> 0.1"
+  }
   
 
 }
