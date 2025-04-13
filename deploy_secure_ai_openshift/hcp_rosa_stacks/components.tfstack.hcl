@@ -10,7 +10,6 @@ component "hcp_rosa" {
     public_subnets = var.public_subnets
     private_subnets = var.private_subnets
     availability_zones = var.availability_zones
-    aws_region = var.aws_region
     cluster_name = var.cluster_name
     openshift_version = var.openshift_version
     account_role_prefix = var.account_role_prefix
