@@ -9,6 +9,7 @@ deployment "rosa_development" {
     aws_identity_token = identity_token.aws.jwt
     role_arn            = "arn:aws:iam::855831148133:role/tfstacks-role"
     regions             = ["ap-southeast-2"]
+    
 
 
   }
@@ -19,7 +20,6 @@ deployment "rosa_development" {
 #     aws_identity_token = identity_token.aws.jwt
 #     role_arn            = "arn:aws:iam::855831148133:role/tfstacks-role"
 #     regions             = ["ap-southeast-2"]
-
 #   }
 # }
 
