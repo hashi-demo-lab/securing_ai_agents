@@ -1,12 +1,11 @@
 
 #HCP ROSA
 component "hcp_rosa" {
-  for_each = var.regions
 
   source = "./hcp_rosa"
 
   inputs = {
-    region = each.value
+    region = var.region
     cidr_block   = var.cidr_block
     public_subnets = var.public_subnets
     private_subnets = var.private_subnets
@@ -23,7 +22,6 @@ component "hcp_rosa" {
 
   providers = {
     aws    = provider.aws.configurations[each.value]
-    kubernetes  = provider.kubernetes.this
     time = provider.time.this
     null = provider.null.this
     tls = provider.tls.this

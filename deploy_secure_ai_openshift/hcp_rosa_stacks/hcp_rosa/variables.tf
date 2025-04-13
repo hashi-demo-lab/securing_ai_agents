@@ -20,17 +20,11 @@ variable "availability_zones" {
   default     = ["ap-southeast-1a", "ap-southeast-1b", "ap-southeast-1c"]
 }
 
-variable "aws_region" {
-  description = "AWS region where the ROSA cluster will be deployed"
+variable "rhcs_token" {
+  description = "Red Hat Cloud Services API token for ROSA authentication"
   type        = string
-  default     = "ap-southeast-2"
+  sensitive   = true
 }
-
-# variable "rhcs_token" {
-#   description = "Red Hat Cloud Services API token for ROSA authentication"
-#   type        = string
-#   sensitive   = true
-# }
 
 variable "cluster_name" {
   description = "Name of the ROSA HCP cluster"
