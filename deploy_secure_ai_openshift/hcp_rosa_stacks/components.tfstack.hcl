@@ -7,20 +7,18 @@ component "hcp_rosa" {
 
   inputs = {
     region = each.value
-    name   = "${var.name}-${each.value}"
-    tags   = var.tags
-
-    # HCP ROSA specific inputs
-    rosa_cluster_name = "${var.name}-${each.value}"
-    rosa_region      = each.value
-    rosa_version     = var.rosa_version
-    rosa_instance_type = var.rosa_instance_type
-    rosa_node_count  = var.rosa_node_count
-
-    # AWS specific inputs
-    aws_access_key_id     = var.aws_access_key_id
-    aws_secret_access_key = var.aws_secret_access_key
-
+    cidr_block   = var.cidr_block
+    public_subnets = var.public_subnets
+    private_subnets = var.private_subnets
+    availability_zones = var.availability_zones
+    aws_region = var.aws_region
+    cluster_name = var.cluster_name
+    openshift_version = var.openshift_version
+    account_role_prefix = var.account_role_prefix
+    operator_role_prefix = var.operator_role_prefix
+    replicas = var.replicas
+    htpasswd_idp_name = var.htpasswd_idp_name
+    htpasswd_username = var.htpasswd_username
   }
 
   providers = {
