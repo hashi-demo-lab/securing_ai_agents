@@ -11,7 +11,7 @@ output "cluster_domain" {
 output "cluster_admin_username" {
   value       = module.hcp.cluster_admin_username
   description = "The username of the admin user."
-  sensitive = true
+  sensitive   = true
 }
 
 output "cluster_admin_password" {

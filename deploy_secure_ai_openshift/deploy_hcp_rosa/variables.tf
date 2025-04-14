@@ -26,11 +26,11 @@ variable "aws_region" {
   default     = "ap-southeast-2"
 }
 
-# variable "rhcs_token" {
-#   description = "Red Hat Cloud Services API token for ROSA authentication"
-#   type        = string
-#   sensitive   = true
-# }
+variable "rhcs_token" {
+  description = "Red Hat Cloud Services API token for ROSA authentication"
+  type        = string
+  sensitive   = true
+}
 
 variable "cluster_name" {
   description = "Name of the ROSA HCP cluster"

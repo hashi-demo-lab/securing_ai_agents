@@ -1,5 +1,5 @@
-variable "regions" {
-  type = set(string)
+variable "region" {
+  type = string
 }
 
 variable "aws_identity_token" {
@@ -8,69 +8,48 @@ variable "aws_identity_token" {
   sensitive = true
 }
 
-variable "k8s_identity_token" {
-  type = string
-  ephemeral = true
-  sensitive = true
-}
-
-variable "workload_idp_name" {
-  type = string
-  default = "tfstacks-workload-identity-provider"
-}
-
-variable "aws_auth_roles" {
-  type = list(object({
-    rolearn  = string
-    username = string
-    groups   = list(string)
-  }))
-  default = []
-}
-
-variable "role_arn" {
+variable "cidr_block" {
   type = string
 }
 
-variable "vpc_name" {
-  type = string 
+variable "public_subnets" {
+  type = list(string)
 }
 
-variable "vpc_cidr" {
-  type = string
+variable "private_subnets" {
+  type = list(string)
 }
 
-variable "kubernetes_version" {
-  type = string
-  default = "1.29"
+variable "availability_zones" {
+  type = list(string)
 }
 
 variable "cluster_name" {
   type = string
-  default = "eks-cluster"
 }
 
-variable "namespace" {
-  type = string
-  default = "hashibank"
-}
-
-variable "tfc_hostname" {
+variable "openshift_version" {
   type = string
 }
 
-variable "tfc_organization_name" {
+variable "account_role_prefix" {
   type = string
 }
 
-variable "tfc_kubernetes_audience" {
-  type = string
-}
-variable "eks_clusteradmin_arn" {
+variable "operator_role_prefix" {
   type = string
 }
 
-variable "eks_clusteradmin_username" {
+variable "replicas" {
+  type = number
+}
+
+variable "htpasswd_idp_name" {
   type = string
 }
+
+variable "htpasswd_username" {
+  type = string
+}
+
 

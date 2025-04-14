@@ -1,5 +1,5 @@
 module "hcp" {
-  source = "terraform-redhat/rosa-hcp/rhcs"
+  source  = "terraform-redhat/rosa-hcp/rhcs"
   version = "1.6.5"
 
   cluster_name           = var.cluster_name
@@ -21,7 +21,7 @@ module "hcp" {
 # HTPASSWD IDP
 ############################
 module "htpasswd_idp" {
-  source = "terraform-redhat/rosa-hcp/rhcs//modules/idp"
+  source  = "terraform-redhat/rosa-hcp/rhcs//modules/idp"
   version = "1.6.5"
 
   cluster_id         = module.hcp.cluster_id
